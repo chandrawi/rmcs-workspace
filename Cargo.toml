@@ -1,0 +1,9 @@
+[workspace]
+members = [
+    "rmcs-auth-api/rust",
+    "rmcs-auth-db",
+    "rmcs-resource-api/rust",
+    "rmcs-resource-db",
+    "rmcs-api-server",
+    "rmcs-api-client",
+]

@@ -1,0 +1,18 @@
+[submodule "rmcs-auth-api"]
+	path = rmcs-auth-api
+	url = https://github.com/chandrawi/rmcs-auth-api
+[submodule "rmcs-auth-db"]
+	path = rmcs-auth-db
+	url = https://github.com/chandrawi/rmcs-auth-db
+[submodule "rmcs-resource-api"]
+	path = rmcs-resource-api
+	url = https://github.com/chandrawi/rmcs-resource-api
+[submodule "rmcs-resource-db"]
+	path = rmcs-resource-db
+	url = https://github.com/chandrawi/rmcs-resource-db
+[submodule "rmcs-api-server"]
+	path = rmcs-api-server
+	url = https://github.com/chandrawi/rmcs-api-server
+[submodule "rmcs-api-client"]
+	path = rmcs-api-client
+	url = https://github.com/chandrawi/rmcs-api-client
