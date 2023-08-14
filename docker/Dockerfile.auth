@@ -1,0 +1,16 @@
+FROM rust:slim-bookworm AS builder
+
+RUN apt-get update \
+    && apt-get install -y protobuf-compiler \
+    && apt-get clean
+
+WORKDIR /usr/src/rmcs-workspace
+COPY . .
+
+RUN cargo install --path ./rmcs-api-server --bin auth_server
+
+FROM debian:bookworm-slim
+
+COPY --from=builder /usr/local/cargo/bin/auth_server /usr/local/bin/auth_server
+
+ENTRYPOINT ["auth_server"]
