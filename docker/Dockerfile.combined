@@ -1,0 +1,24 @@
+FROM rust:alpine3.18 AS builder
+
+RUN apk update \
+    && apk add build-base protobuf
+
+WORKDIR /usr/src/rmcs-workspace
+COPY . .
+
+RUN cargo install --path ./rmcs-api-server --bin auth_server
+RUN cargo install --path ./rmcs-api-server --bin resource_server
+
+FROM alpine:3.18
+
+RUN apk update \
+    && apk add iproute2
+
+COPY --from=builder /usr/local/cargo/bin/auth_server /usr/local/bin/auth_server
+COPY --from=builder /usr/local/cargo/bin/resource_server /usr/local/bin/resource_server
+
+WORKDIR /home/app
+COPY ./docker/start_servers.sh /home/app/start_servers.sh
+RUN chmod +x /home/app/start_servers.sh
+
+ENTRYPOINT ["/home/app/start_servers.sh"]

@@ -1,4 +1,5 @@
-**/.docker
+/docker
+!/docker/*.sh
 **/target
 **/Cargo.lock
 **.env
