@@ -3,7 +3,7 @@ version: '3'
 services:
 
   combined-db:
-    image: postgres_multidb:latest
+    image: timescale_multidb:latest-pg15
     ports:
       - 5434:5432
     environment:

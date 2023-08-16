@@ -17,8 +17,8 @@ RUN apk update \
 COPY --from=builder /usr/local/cargo/bin/auth_server /usr/local/bin/auth_server
 COPY --from=builder /usr/local/cargo/bin/resource_server /usr/local/bin/resource_server
 
-WORKDIR /home/app
-COPY ./docker/start_servers.sh /home/app/start_servers.sh
-RUN chmod +x /home/app/start_servers.sh
+WORKDIR /home
+COPY ./docker/start_servers.sh /home/start_servers.sh
+RUN chmod +x /home/start_servers.sh
 
-ENTRYPOINT ["/home/app/start_servers.sh"]
+ENTRYPOINT ["/home/start_servers.sh"]
