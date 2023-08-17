@@ -1,16 +1,24 @@
-FROM rust:slim-bookworm AS builder
+# build cargo chef tool
+FROM rust:slim-bookworm AS chef
+RUN cargo install cargo-chef --locked
+WORKDIR app
 
-RUN apt-get update \
-    && apt-get install -y protobuf-compiler \
-    && apt-get clean
-
-WORKDIR /usr/src/rmcs-workspace
+# create recipe
+FROM chef AS planner
 COPY . .
+RUN cargo chef prepare --recipe-path recipe.json
 
-RUN cargo install --path ./rmcs-api-server --bin resource_server
+# build dependency based on recipe
+FROM chef AS builder
+COPY --from=planner /app/recipe.json recipe.json
+RUN cargo chef cook --release --recipe-path recipe.json
+# build the application
+RUN apt-get update && apt-get install -y protobuf-compiler
+COPY . .
+RUN cargo build --release --bin resource_server
 
-FROM debian:bookworm-slim
-
-COPY --from=builder /usr/local/cargo/bin/resource_server /usr/local/bin/resource_server
-
-ENTRYPOINT ["resource_server"]
+# create application runtime image without rust toolchain
+FROM debian:bookworm-slim AS runtime
+WORKDIR app
+COPY --from=builder /app/target/release/resource_server /usr/local/bin
+ENTRYPOINT ["/usr/local/bin/resource_server"]

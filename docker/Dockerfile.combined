@@ -1,24 +1,28 @@
-FROM rust:alpine3.18 AS builder
+# build cargo chef tool
+FROM rust:slim-bookworm AS chef
+RUN cargo install cargo-chef --locked
+WORKDIR app
 
-RUN apk update \
-    && apk add build-base protobuf
-
-WORKDIR /usr/src/rmcs-workspace
+# create recipe
+FROM chef AS planner
 COPY . .
+RUN cargo chef prepare --recipe-path recipe.json
 
-RUN cargo install --path ./rmcs-api-server --bin auth_server
-RUN cargo install --path ./rmcs-api-server --bin resource_server
+# build dependency based on recipe
+FROM chef AS builder
+COPY --from=planner /app/recipe.json recipe.json
+RUN cargo chef cook --release --recipe-path recipe.json
+# build the application
+RUN apt-get update && apt-get install -y protobuf-compiler
+COPY . .
+RUN cargo build --release --bin auth_server
+RUN cargo build --release --bin resource_server
 
-FROM alpine:3.18
-
-RUN apk update \
-    && apk add iproute2
-
-COPY --from=builder /usr/local/cargo/bin/auth_server /usr/local/bin/auth_server
-COPY --from=builder /usr/local/cargo/bin/resource_server /usr/local/bin/resource_server
-
-WORKDIR /home
-COPY ./docker/start_servers.sh /home/start_servers.sh
-RUN chmod +x /home/start_servers.sh
-
-ENTRYPOINT ["/home/start_servers.sh"]
+# create application runtime image without rust toolchain
+FROM debian:bookworm-slim AS runtime
+WORKDIR app
+COPY --from=builder /app/target/release/auth_server /usr/local/bin
+COPY --from=builder /app/target/release/resource_server /usr/local/bin
+COPY ./docker/start_servers.sh start_servers.sh
+RUN chmod +x /app/start_servers.sh
+ENTRYPOINT ["/app/start_servers.sh"]

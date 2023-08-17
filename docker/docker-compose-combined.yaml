@@ -14,7 +14,7 @@ services:
     restart: unless-stopped
 
   combined-server:
-    image: combined_server:0.1.0
+    image: combined_server:0.2.0
     ports:
       - 9001:9001
       - 9002:9002
