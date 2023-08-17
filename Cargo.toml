@@ -7,3 +7,6 @@ members = [
     "rmcs-api-server",
     "rmcs-api-client",
 ]
+
+[profile.release]
+opt-level = "s"

@@ -21,6 +21,7 @@ RUN cargo build --release --bin resource_server
 # create application runtime image without rust toolchain
 FROM debian:bookworm-slim AS runtime
 WORKDIR app
+RUN apt-get update && apt-get install -y iproute2
 COPY --from=builder /app/target/release/auth_server /usr/local/bin
 COPY --from=builder /app/target/release/resource_server /usr/local/bin
 COPY ./docker/start_servers.sh start_servers.sh
