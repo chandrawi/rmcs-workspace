@@ -10,8 +10,8 @@
 **/README.md
 **/tests
 /rmcs-auth-api
-!/rmcs-auth-api/proto
 !/rmcs-auth-api/rust
 /rmcs-resource-api
-!/rmcs-resource-api/proto
 !/rmcs-resource-api/rust
+/rmcs-api-client
+!/rmcs-api-client/rust

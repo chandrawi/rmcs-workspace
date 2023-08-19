@@ -5,7 +5,7 @@ members = [
     "rmcs-resource-api/rust",
     "rmcs-resource-db",
     "rmcs-api-server",
-    "rmcs-api-client",
+    "rmcs-api-client/rust",
 ]
 
 [profile.release]
