@@ -11,7 +11,9 @@
 **/tests
 /rmcs-auth-api
 !/rmcs-auth-api/rust
+!/rmcs-auth-api/proto
 /rmcs-resource-api
 !/rmcs-resource-api/rust
+!/rmcs-resource-api/proto
 /rmcs-api-client
 !/rmcs-api-client/rust

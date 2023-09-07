@@ -1,7 +1,8 @@
 # build cargo chef tool
-FROM rust:slim-bookworm AS chef
+FROM rust:alpine3.18 AS chef
+RUN apk update && apk add build-base
 RUN cargo install cargo-chef --locked
-WORKDIR app
+WORKDIR /app
 
 # create recipe
 FROM chef AS planner
@@ -13,12 +14,12 @@ FROM chef AS builder
 COPY --from=planner /app/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 # build the application
-RUN apt-get update && apt-get install -y protobuf-compiler
+RUN apk add protobuf
 COPY . .
 RUN cargo build --release --bin auth_server
 
 # create application runtime image without rust toolchain
-FROM debian:bookworm-slim AS runtime
-WORKDIR app
+FROM alpine:3.18 AS runtime
+WORKDIR /app
 COPY --from=builder /app/target/release/auth_server /usr/local/bin
 ENTRYPOINT ["/usr/local/bin/auth_server"]
