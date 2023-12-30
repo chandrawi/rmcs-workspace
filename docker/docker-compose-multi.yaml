@@ -1,0 +1,97 @@
+version: '3'
+
+services:
+
+  auth-db:
+    image: postgres:16-alpine
+    ports:
+      - 5434:5432
+    environment:
+      - POSTGRES_PASSWORD=db_P4s5w0rd
+      - POSTGRES_DB=rmcs_auth
+    volumes:
+      - auth-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  auth-server:
+    image: auth_server:0.3.0
+    ports:
+      - 9001:9001
+    environment:
+      - DATABASE_URL_AUTH=postgres://postgres:db_P4s5w0rd@auth-db/rmcs_auth
+      - BIND_ADDRESS_AUTH=0.0.0.0:9001
+      - ROOT_PASSWORD=r0ot_P4s5w0rd
+      - ROOT_ACCESS_DURATION=300
+      - ROOT_REFRESH_DURATION=3600
+    depends_on:
+      - auth-db
+    restart: unless-stopped
+
+  resource-db-1:
+    image: timescale/timescaledb:latest-pg16
+    ports:
+      - 5435:5432
+    environment:
+      - POSTGRES_PASSWORD=db_P4s5w0rd
+      - POSTGRES_DB=rmcs_resource
+    volumes:
+      - resource-data-1:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  resource-server-1:
+    image: resource_server:0.3.0
+    ports:
+      - 9002:9002
+    environment:
+      - DATABASE_URL_RESOURCE=postgres://postgres:db_P4s5w0rd@resource-db-1/rmcs_resource
+      - BIND_ADDRESS_RESOURCE=0.0.0.0:9002
+      - SERVER_ADDRESS_AUTH=http://auth-server:9001
+      - ROOT_PASSWORD=r0ot_P4s5w0rd
+      - ROOT_ACCESS_DURATION=300
+      - ROOT_REFRESH_DURATION=3600
+      - API_ID=00000000-0000-0000-0000-000000000000
+      - API_PASSWORD=Ap1_P4s5w0rd
+    depends_on:
+      - resource-db-1
+      - auth-server
+    restart: unless-stopped
+
+  resource-db-2:
+    image: timescale/timescaledb:latest-pg16
+    ports:
+      - 5436:5432
+    environment:
+      - POSTGRES_PASSWORD=db_P4s5w0rd
+      - POSTGRES_DB=rmcs_resource
+    volumes:
+      - resource-data-2:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  resource-server-2:
+    image: resource_server:0.3.0
+    ports:
+      - 9003:9003
+    environment:
+      - DATABASE_URL_RESOURCE=postgres://postgres:db_P4s5w0rd@resource-db-2/rmcs_resource
+      - BIND_ADDRESS_RESOURCE=0.0.0.0:9003
+      - SERVER_ADDRESS_AUTH=http://auth-server:9001
+      - ROOT_PASSWORD=r0ot_P4s5w0rd
+      - ROOT_ACCESS_DURATION=300
+      - ROOT_REFRESH_DURATION=3600
+      - API_ID=00000000-0000-0000-0000-000000000000
+      - API_PASSWORD=Ap1_P4s5w0rd
+    depends_on:
+      - resource-db-2
+      - auth-server
+    restart: unless-stopped
+
+volumes:
+
+  auth-data:
+    driver: local
+
+  resource-data-1:
+    driver: local
+
+  resource-data-2:
+    driver: local
