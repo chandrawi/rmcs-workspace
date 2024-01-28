@@ -1,5 +1,5 @@
 # build cargo chef tool
-FROM rust:alpine3.18 AS chef
+FROM rust:alpine3.19 AS chef
 RUN apk update && apk add build-base
 RUN cargo install cargo-chef --locked
 WORKDIR /app
@@ -20,7 +20,7 @@ RUN cargo build --release --bin auth_server
 RUN cargo build --release --bin resource_server
 
 # create application runtime image without rust toolchain
-FROM alpine:3.18 AS runtime
+FROM alpine:3.19 AS runtime
 WORKDIR /app
 RUN apk update && apk add iproute2
 COPY --from=builder /app/target/release/auth_server /usr/local/bin
