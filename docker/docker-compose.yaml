@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
 
   auth-server:
-    image: auth_server:0.3.0
+    image: auth_server:0.3.1
     ports:
       - 9001:9001
     environment:
@@ -37,7 +37,7 @@ services:
     restart: unless-stopped
 
   resource-server:
-    image: resource_server:0.3.0
+    image: resource_server:0.3.1
     ports:
       - 9002:9002
     environment:

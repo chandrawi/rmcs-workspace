@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
 
   combined-server:
-    image: combined_server:0.3.0
+    image: combined_server:0.3.1
     ports:
       - 9001:9001
       - 9002:9002
