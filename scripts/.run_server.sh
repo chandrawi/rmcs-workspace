@@ -2,6 +2,9 @@
 
 BASE_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && dirname $PWD )
 ENV_FILE="${BASE_DIR}/.env"
+if [ $# -gt 0 ]; then
+	ENV_FILE="${BASE_DIR}$1"
+fi
 SERVER_AUTH="${BASE_DIR}/target/release/auth_server &"
 SERVER_RESOURCE="${BASE_DIR}/target/release/resource_server &"
 
