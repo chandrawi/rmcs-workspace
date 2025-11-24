@@ -1,7 +1,7 @@
 services:
 
   auth-db:
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     ports:
       - 5434:5432
     environment:
@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
 
   auth-server:
-    image: auth_server:0.4.0
+    image: auth_server:0.5.0
     ports:
       - 9001:9001
     environment:
@@ -26,7 +26,7 @@ services:
     restart: unless-stopped
 
   resource-db-1:
-    image: timescale/timescaledb:latest-pg17
+    image: timescale/timescaledb:latest-pg18
     ports:
       - 5435:5432
     environment:
@@ -37,7 +37,7 @@ services:
     restart: unless-stopped
 
   resource-server-1:
-    image: resource_server:0.4.0
+    image: resource_server:0.5.0
     ports:
       - 9002:9002
     environment:
@@ -55,7 +55,7 @@ services:
     restart: unless-stopped
 
   resource-db-2:
-    image: timescale/timescaledb:latest-pg17
+    image: timescale/timescaledb:latest-pg18
     ports:
       - 5436:5432
     environment:
@@ -66,7 +66,7 @@ services:
     restart: unless-stopped
 
   resource-server-2:
-    image: resource_server:0.4.0
+    image: resource_server:0.5.0
     ports:
       - 9003:9003
     environment:

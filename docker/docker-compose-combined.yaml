@@ -1,7 +1,7 @@
 services:
 
   combined-db:
-    image: timescale_multidb:latest-pg17
+    image: timescale_multidb:latest-pg18
     ports:
       - 5434:5432
     environment:
@@ -12,7 +12,7 @@ services:
     restart: unless-stopped
 
   combined-server:
-    image: combined_server:0.4.0
+    image: combined_server:0.5.0
     ports:
       - 9001:9001
       - 9002:9002
